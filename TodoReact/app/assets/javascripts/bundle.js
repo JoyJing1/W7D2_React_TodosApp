@@ -20482,6 +20482,8 @@
 	        return React.createElement(TodoListItem, {
 	          title: todo.title,
 	          body: todo.body,
+	          done: todo.done,
+	          id: todo.id,
 	          key: todo.title + todo.body });
 	      }),
 	      React.createElement(TodoListForm, null)
@@ -20496,11 +20498,26 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	const React = __webpack_require__(2);
+	const TodoStore = __webpack_require__(1);
 	
 	const TodoListItem = React.createClass({
 	  displayName: "TodoListItem",
 	
+	  handleDestroy(event) {
+	    let id = parseInt(event.target.id);
+	
+	    TodoStore.destroy(id);
+	  },
+	
+	  handleDone(event) {
+	    let id = parseInt(event.target.id);
+	
+	    TodoStore.toggleDone(id);
+	  },
+	
 	  render: function () {
+	    let doneText = this.props.done ? "Undo" : "Done";
+	
 	    return React.createElement(
 	      "div",
 	      null,
@@ -20513,6 +20530,16 @@
 	        "div",
 	        null,
 	        this.props.body
+	      ),
+	      React.createElement(
+	        "button",
+	        { onClick: this.handleDestroy, id: this.props.id },
+	        "DELETE!"
+	      ),
+	      React.createElement(
+	        "button",
+	        { onClick: this.handleDone, id: this.props.id },
+	        doneText
 	      )
 	    );
 	  }
@@ -20527,6 +20554,7 @@
 
 	const React = __webpack_require__(2);
 	const TodoListItem = __webpack_require__(170);
+	const TodoStore = __webpack_require__(1);
 	
 	const TodoListForm = React.createClass({
 	  displayName: "TodoListForm",
@@ -20552,8 +20580,7 @@
 	  },
 	
 	  handleSubmit: function (event) {
-	    let title = event.target.value.title;
-	    // Todo.create(); // insert data here
+	    TodoStore.create(this.state);
 	
 	    this.setState({ title: "", body: "", done: false });
 	  },
@@ -20561,42 +20588,32 @@
 	  render: function () {
 	    return React.createElement(
 	      "form",
-	      null,
-	      "This is my TODO List Form"
+	      { onSubmit: this.handleSubmit },
+	      "Title: ",
+	      React.createElement("input", { type: "string", "class": "title", value: this.state.title, onChange: this.updateTitle }),
+	      React.createElement("br", null),
+	      "Body: ",
+	      React.createElement("input", { type: "text", "class": "body", value: this.state.body, onChange: this.updateBody }),
+	      React.createElement("br", null),
+	      React.createElement(
+	        "label",
+	        { "class": "done", "for": "done" },
+	        "Done"
+	      ),
+	      React.createElement("br", null),
+	      "Yes",
+	      React.createElement("input", { type: "radio", id: "done", name: "done", value: "true", onClick: this.updateDone }),
+	      React.createElement("br", null),
+	      "No",
+	      React.createElement("input", { type: "radio", id: "done", name: "done", value: "false", onClick: this.updateDone }),
+	      React.createElement("br", null),
+	      React.createElement("input", { type: "submit" })
 	    );
 	  }
 	
 	});
 	
 	module.exports = TodoListForm;
-	
-	// <input type="string"
-	//         class="title"
-	//         value={this.state.title}
-	//         onChange={TodoListForm.updateTitle}
-	//         >Title</input>
-	//
-	// <input type="text"
-	//         class="body"
-	//         value={this.state.body}
-	//         onChange={TodoListForm.updateBody}
-	//         >Body</input>
-	//
-	// <label class="done">Done
-	//   <input type="radio"
-	//           class="done"
-	//           value="true"
-	//           onClick={TodoListForm.updateDone}
-	//           >Yes</input>
-	//
-	//   <input type="radio"
-	//           class="done"
-	//           value="false"
-	//           onClick={TodoListForm.updateDone}
-	//           >No</input>
-	// </label>
-	//
-	// <input type="submit" onClick={TodoListForm.handleSubmit}></input>
 
 /***/ }
 /******/ ]);

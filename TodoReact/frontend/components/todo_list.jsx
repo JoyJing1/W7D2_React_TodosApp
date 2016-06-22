@@ -30,6 +30,8 @@ const TodoList = React.createClass({
               return <TodoListItem
                       title={todo.title}
                       body={todo.body}
+                      done={todo.done}
+                      id={todo.id}
                       key={todo.title + todo.body}/>;
             })
           }

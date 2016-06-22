@@ -1,5 +1,6 @@
 const React = require("react");
 const TodoListItem = require("./todo_list_item");
+const TodoStore = require("../stores/todo_store");
 
 const TodoListForm = React.createClass({
   getInitialState: function() {
@@ -23,16 +24,28 @@ const TodoListForm = React.createClass({
   },
 
   handleSubmit: function(event) {
-    let title = event.target.value.title;
-    // Todo.create(); // insert data here
+    TodoStore.create(this.state);
 
     this.setState({title: "", body: "", done: false});
   },
-
+  
   render: function(){
     return(
-      <form>
-        This is my TODO List Form
+      <form onSubmit={this.handleSubmit}>
+        Title: <input type="string" class="title" value={this.state.title} onChange={this.updateTitle}></input>
+        <br></br>
+
+        Body: <input type="text" class="body" value={this.state.body} onChange={this.updateBody}></input>
+        <br></br>
+
+        <label class="done" for="done">{"Done"}</label>
+          <br></br>
+          Yes<input type="radio" id="done" name="done" value="true" onClick={this.updateDone}></input>
+          <br></br>
+          No<input type="radio" id="done" name="done" value="false" onClick={this.updateDone}></input>
+
+        <br></br>
+        <input type="submit"></input>
       </form>
     );
   }
@@ -40,32 +53,3 @@ const TodoListForm = React.createClass({
 });
 
 module.exports = TodoListForm;
-
-
-// <input type="string"
-//         class="title"
-//         value={this.state.title}
-//         onChange={TodoListForm.updateTitle}
-//         >Title</input>
-//
-// <input type="text"
-//         class="body"
-//         value={this.state.body}
-//         onChange={TodoListForm.updateBody}
-//         >Body</input>
-//
-// <label class="done">Done
-//   <input type="radio"
-//           class="done"
-//           value="true"
-//           onClick={TodoListForm.updateDone}
-//           >Yes</input>
-//
-//   <input type="radio"
-//           class="done"
-//           value="false"
-//           onClick={TodoListForm.updateDone}
-//           >No</input>
-// </label>
-//
-// <input type="submit" onClick={TodoListForm.handleSubmit}></input>
